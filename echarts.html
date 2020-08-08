@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title></title>
+		<link rel="stylesheet" href="/static/css/reset.css">
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+		<script src="/static/js/jquery.min.js"></script>
+		<script src="/static/js/echart.js"></script>
+		<script src="/static/js/china.js"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+		<style>
+			body {
+				background: #092441;
+				color: #fff;
+			}
+
+			.yellow {
+				background: #ffd82e !important;
+			}
+
+			.red {
+				background: #eb4549 !important;
+			}
+
+			.blues {
+				background: #25d0d7 !important;
+			}
+
+			.cp {
+				width: 100% !important;
+			}
+
+			#numbercus,
+			#numbertype,
+			#numberage {
+				margin: 0 auto;
+			}
+
+			b {
+				font-size: 44px;
+				color: #25d0d7;
+			}
+
+			.fel_be {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			header {
+				margin-bottom: 20px;
+				background-image: linear-gradient(0deg, #08214a 0%, #0d2759 49%, #08214a 100%);
+			}
+
+			header h6 {
+				height: 68px;
+				width: 1200px;
+				text-align: center;
+				margin: 0 auto;
+				font: 500 30px/68px '';
+			}
+
+			header h6 span {
+				float: right;
+				font: 300 16px/68px '';
+			}
+
+			main {
+				display: flex;
+				width: 1892px;
+				margin: 0 auto;
+				justify-content: space-between;
+			}
+
+			main .width220 {
+				width: 220px;
+				height: 280px;
+			}
+
+			main .violet {
+				box-sizing: border-box;
+			}
+
+			/* main .violet+.violet{
+            margin-left: 16px;
+        } */
+			main .violet .name {
+				margin-bottom: 10px;
+			}
+
+			main .violet .child {
+				width: 680px;
+				height: 530px;
+				background: #22266b;
+				margin-bottom: 16px;
+				padding: 26px 20px 30px 20px;
+				box-sizing: border-box;
+			}
+
+			main .violet .child>span b {
+				font: 500 44px/1 '';
+				color: #13d9dc;
+				margin-right: 8px;
+			}
+
+			main .violet .child2 {
+				height: 400px;
+			}
+
+			main .violet .child2 div span.team {
+				margin-right: 56px;
+			}
+
+			main .violet .child2 .bar {
+				margin-top: 22px;
+			}
+
+			main .violet .child2 .bar div span {
+				width: 206px;
+				height: 46px;
+				display: block;
+				background: #fff;
+				color: #333;
+				line-height: 46px;
+				font-size: 14px;
+				text-align: center;
+			}
+
+			.progress {
+				width: 100%;
+				background: #fff;
+				height: 6px;
+				border-radius: 2px;
+				margin-top: 8px;
+			}
+
+			.progress p {
+				border-radius: 2px;
+				height: 6px;
+				background: yellow;
+				width: 100%;
+			}
+
+			.progressbar {
+				margin-top: 20px;
+				font-size: 14px;
+			}
+
+			.progressbarbox {
+				padding: 26px 20px 30px 20px;
+				background: #22266b;
+				margin-bottom: 16px;
+			}
+
+			.progressbarbox2 {
+				height: 718px;
+				overflow-y: auto;
+				box-sizing: border-box;
+			}
+
+			.total {
+				font-size: 14px;
+				margin-top: 6px;
+			}
+
+			.flex_be {
+				display: flex;
+				justify-content: space-between;
+			}
+
+			.flex {
+				display: flex;
+			}
+
+			main .violet .child2 .bar div span.yue_total {
+				background: #00e1d5;
+				color: #fff;
+			}
+
+			.violet .thirdcolumn {
+				/* overflow: auto; */
+				width: 305px;
+				height: 262px;
+				background-color: #22266b;
+				margin-bottom: 16px;
+			}
+
+			.violet .thirdcolumn3 {
+				height: 390px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="app">
+			<header>
+				<h6>诚心承亿实时数据 <span>{{time}}</span></h6>
+			</header>
+			<main>
+				<!-- 一 -->
+				<div class="violet width220">
+					<div class="progressbarbox">
+						<div class="fel_be name">
+							<span>综合视图</span>
+							<span>进行中</span>
+						</div>
+						<div class="progressbar" v-for='(item,k) in datalist.view' :key="k">
+							<div class="fel_be">
+								<span>{{item.name}}</span>
+								<span>{{item.width}}</span>
+							</div>
+							<progressbar :width='item.width' :mystyle="{width:item.width+'px'}" :mycolor='customColorMethod(item.width)' />
+						</div>
+					</div>
+
+					<div class="progressbarbox progressbarbox2">
+						<div class="fel_be name">
+							<span>客户城市排名</span>
+							<span>前十</span>
+						</div>
+						<div class="progressbar" v-for='(item,k) in datalist.city_rank' :key="k">
+							<div class="fel_be">
+								<span>{{item.name}}</span>
+								<span>{{item.value}}</span>
+							</div>
+							<progressbar :width='item.width' :mystyle="{width:item.value+'px'}" :mycolor='customColorMethod(item.value)' />
+						</div>
+					</div>
+				</div>
+				<!-- 二 -->
+				<div class="violet">
+					<div class="child">
+						<div class=" flex_be">
+							<div>
+								<p>申请贷款总额</p>
+								<p class="total">总计</p>
+							</div>
+							<span><b>{{datalist.total}}</b>元</span>
+						</div>
+						<div id="map" style="width: 610px;height: 424px;"></div>
+					</div>
+
+					<div class="child child2">
+						<div>
+							<span class="team">团队月统计</span>
+							<span>进行中</span>
+						</div>
+						<div class="bar">
+							<div class="flex">
+								<span v-for='(item,k) in navlist' :key="k" :class={yue_total:k==choosedid} @click=handSwich(k)>{{item}}</span>
+							</div>
+						</div>
+						<div id="teambox" style="width:608px;height:270px" v-show='choosedid==0'></div>
+						<div id="teambox1" style="width:608px;height:270px" v-show='choosedid==1'></div>
+						<div id="teambox2" style="width:608px;height:270px" v-show='choosedid==2'></div>
+					</div>
+
+				</div>
+				<!-- 三 -->
+				<div class="violet">
+					<div class="thirdcolumn">
+						<div class="progressbarbox" style="padding-bottom: 0;">
+							<div class="fel_be name">
+								<span>客户数量</span>
+								<span>占比</span>
+							</div>
+						</div>
+						<div id="numbercus" style="width: 242px;height: 194px;"></div>
+					</div>
+					<div class="thirdcolumn">
+						<div class="progressbarbox">
+							<div class="fel_be name">
+								<span>订单量城市日排名</span>
+								<span>前三</span>
+							</div>
+							<div class="progressbar" v-for='(item,k) in datalist.area_rank' :key="k">
+								<div class="fel_be">
+									<span>{{item.name}}</span>
+									<span>{{item.counts}}</span>
+								</div>
+								<progressbar :width='item.width' :mystyle="{width:item.counts+'px'}" :mycolor='customColorMethod(item.counts)' />
+							</div>
+						</div>
+					</div>
+					<div class="thirdcolumn thirdcolumn3">
+						<div class="progressbarbox">
+							<div class="fel_be name">
+								<span>团队日注册用户</span>
+								<span>{{datalist.apply_team}}</span>
+							</div>
+							<div class="progressbar" v-for='(item,k) in datalist.apply_today' :key="k">
+								<div class="fel_be">
+									<span>{{item.name}}</span>
+									<span>{{item.width}}</span>
+								</div>
+								<progressbar :width='item.width' :mystyle="{width:item.width+'px'}" :mycolor='customColorMethod(item.width)' />
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- 四 -->
+				<div class="violet">
+					<div class="thirdcolumn">
+						<div class="progressbarbox" style="padding-bottom: 0;">
+							<div class="fel_be name">
+								<span>客户类型</span>
+								<span>占比</span>
+							</div>
+						</div>
+						<div id="numbertype" style="width: 242px;height: 194px;"></div>
+					</div>
+					<div class="thirdcolumn">
+						<div class="progressbarbox">
+							<div class="fel_be name">
+								<span>各个银行日申请量</span>
+								<span>前三</span>
+							</div>
+							<div class="progressbar" v-for='(item,k) in datalist.banks' :key="k">
+								<div class="fel_be">
+									<span>{{item.title}}</span>
+									<span>{{item.counts}}</span>
+								</div>
+								<progressbar :width='item.width' :mystyle="{width:item.counts+'px'}" :mycolor='customColorMethod(item.counts)' />
+							</div>
+						</div>
+					</div>
+					<div class="thirdcolumn thirdcolumn3">
+						<div class="progressbarbox">
+							<div class="fel_be name">
+								<span>团队日放款总额</span>
+								<span>{{datalist.money_team}}</span>
+							</div>
+							<div class="progressbar" v-for='(item,k) in datalist.money_today' :key="k">
+								<div class="fel_be">
+									<span>{{item.name}}</span>
+									<span>{{item.width}}</span>
+								</div>
+								<progressbar :width='item.width' :mystyle="{width:item.width+'px'}" :mycolor='customColorMethod(item.width)' />
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- 五 -->
+				<div class="violet">
+						<div class="thirdcolumn">
+							<div class="progressbarbox" style="padding-bottom: 0;">
+								<div class="fel_be name">
+									<span>个人回款佣金</span>
+									<span>前三</span>
+								</div>
+							</div>
+							<div id="numberage" style="width: 242px;height: 194px;"></div>
+						</div>
+					<div class="thirdcolumn">
+						<div class="progressbarbox">
+							<div class="fel_be name">
+								<span>今日注册用户数</span>
+								<span>{{datalist.today_reg}}</span>
+							</div>
+							<div class="progressbar" v-for='(item,k) in datalist.reg_user' :key="k">
+								<div class="fel_be">
+
+									<span>{{item.name}}</span>
+
+									<span>{{item.width}}</span>
+								</div>
+
+								<progressbar :width='item.width' :mystyle="{width:item.width+'px'}" :mycolor='customColorMethod(item.width)' />
+							</div>
+						</div>
+					</div>
+					<div class="thirdcolumn thirdcolumn3">
+						<div class="progressbarbox">
+							<div class="fel_be name">
+								<span>团队日回款佣金</span>
+								<span>{{datalist.returned_team }}</span>
+							</div>
+							<div class="progressbar" v-for='(item,k) in datalist.returned_today' :key="k">
+								<div class="fel_be">
+									<span>{{item.name}}</span>
+									<span>{{item.width}}</span>
+								</div>
+								<progressbar :width='item.width' :mystyle="{width:item.width+'px'}" :mycolor='customColorMethod(item.width)' />
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+
+	</body>
+	<script>
+		//子组件
+		Vue.component('progressbar', {
+			props: {
+				mystyle: String,
+				mycolor: String
+			},
+			data() {
+				return {}
+			},
+			template: `
+        <div class="progress">
+            <p :style='mystyle' :class='mycolor' ></p>
+        </div>
+        `
+		})
+		var vm = new Vue({
+
+			el: '#app',
+			data: {
+				integratedViewList: [{
+						name: '累计申请人数',
+						width: 50,
+					},
+					{
+						name: '累计终审总额',
+						width: 90,
+					},
+					{
+						name: '累计放款总额',
+						width: 100,
+					}
+				],
+				updateTimer: null, // 更新时钟的timer
+				currTime: new Date(), //当前日期对象           
+				timer: null, //定时器名称
+				datalist: [],
+				navlist: ['注册人数', '月放款总额', '月放款佣金'],
+				choosedid: 0
+			},
+			computed: {
+				time() {
+					let year = this.currTime.getFullYear();
+					let month = this.currTime.getMonth() + 1 < 10 ? "0" + (this.currTime.getMonth() +
+						1) : this.currTime.getMonth() + 1;
+					let date = this.currTime.getDate() < 10 ? "0" + this.currTime.getDate() : this.currTime
+						.getDate();
+					let hours = this.currTime.getHours() > 9 ? this.currTime.getHours() : ('0' + this.currTime
+						.getHours())
+					let minutes = this.currTime.getMinutes() > 9 ? this.currTime.getMinutes() : ('0' + this.currTime
+						.getMinutes())
+					let seconds = this.currTime.getSeconds() > 9 ? this.currTime.getSeconds() : ('0' + this.currTime
+						.getSeconds())
+					return year + '.' + month + '.' + date + ' ' + hours + ':' + minutes + ':' + seconds
+				}
+			},
+			mounted() {
+				this.getNumberCus();
+				this.getNumberType();
+				this.getNumberAge();
+				this.getTeam();
+				this.getTeam1();
+				this.getTeam2();
+				this.getMap();
+				// this.getdata();
+				//每一分钟掉一次
+				this.timer = setInterval(() => {
+					setTimeout(this.getdata, 0)
+				}, 1000 * 60)
+
+			},
+			created() {
+				this.getdata();
+				this.currTime = new Date();
+				clearInterval(this.updateTimer)
+				this.updateTimer = setInterval(() => {
+					this.currTime = new Date()
+				}, 1000)
+
+			},
+			beforeDestroy() {
+				clearInterval(this.updateTimer)
+				clearInterval(this.timer);
+				this.timer = null;
+			},
+			methods: {
+				//通过进度条判断颜色
+				customColorMethod(percentage) {
+					if (percentage < 180) {
+						return 'red';
+					} else if (percentage < 1000000) {
+						return 'yellow cp';
+					} else {
+						return 'blues cp';
+					}
+				},
+				//用户注册切换
+				handSwich(k) {
+					this.choosedid = k
+				},
+				//获取数据
+				async getdata() {
+					await axios.post('total_analyse').then(function(res) {
+						vm.datalist = res.data.data
+					})
+				},
+				//男女分布图
+				async getNumberCus() {
+					await this.getdata();
+					var myChart = echarts.init(document.getElementById('numbercus'));
+					myChart.setOption({
+						//hover提示信息
+						tooltip: {
+							color: '#fff'
+						},
+						legend: {
+							left: 75,
+							bottom: 0,
+							itemWidth: 10, //图例标记的图形宽度
+							itemHeight: 10, //图例标记的图形高度
+							itemGap: 30, //设置间距
+							icon: 'circle',
+							data: ['男', '女'],
+							textStyle: {
+								color: '#fff', //文字颜色
+								fontSize: 14 //文字大小
+							}
+						},
+						//圆环颜色
+						color: ['#ffc700', '#f7622e'],
+						//圆环内的内容
+						graphic: [{
+							type: 'text',
+							top: '30%',
+							left: 'center',
+							style: {
+								text: this.datalist.total_num + '人',
+								fill: '#fff',
+								fontSize: 12,
+							}
+						}],
+						series: [{
+								type: 'pie', //饼图的中心（圆心）坐标，数组的第一项是横坐标，第二项是纵坐标。
+								center: ['50%', '35%'], //饼图的半径，数组的第一项是内半径，第二项是外半径
+								radius: ['50%', '70%'], //饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度
+								label: {
+									show: false,
+									// position: 'center'
+								},
+								animation: false,
+								emphasis: {
+									//鼠标放在圆环上显示的标签样式
+									show: true,
+									textStyle: {
+										fontSize: '18',
+										fontWeight: 'bold'
+									}
+								},
+								data: this.datalist.sex,
+								labelLine: {
+									normal: {
+										show: false, //是否显示引导线
+										length: 10, //百分比引导线
+										length2: 20 //视觉引导项第二段的长度。
+									}
+								},
+							}
+
+						]
+					});
+				},
+				//类型分布图
+				async getNumberType() {
+					await this.getdata();
+					var myChart = echarts.init(document.getElementById('numbertype'));
+					myChart.setOption({
+						//hover提示信息
+						tooltip: {
+							color: '#fff'
+						},
+						legend: {
+							left: 75,
+							bottom: 0,
+							itemWidth: 10, //图例标记的图形宽度
+							itemHeight: 10, //图例标记的图形高度
+							itemGap: 30, //设置间距
+							icon: 'circle',
+							data: ['公司', '个人'],
+							textStyle: {
+								color: '#fff', //文字颜色
+								fontSize: 14 //文字大小
+							}
+						},
+						//圆环颜色
+						color: ['#ffc700', '#f7622e'],
+						//圆环内的内容
+						graphic: [{
+							type: 'text',
+							top: '30%',
+							left: 'center',
+							style: {
+								text: this.datalist.total_num + '人',
+								fill: '#fff',
+								fontSize: 12,
+							}
+						}],
+						series: [{
+								type: 'pie', //饼图的中心（圆心）坐标，数组的第一项是横坐标，第二项是纵坐标。
+								center: ['50%', '35%'], //饼图的半径，数组的第一项是内半径，第二项是外半径
+								radius: ['50%', '70%'], //饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度
+								label: {
+									show: false,
+									// position: 'center'
+								},
+								animation: false,
+								emphasis: {
+									//鼠标放在圆环上显示的标签样式
+									show: true,
+									textStyle: {
+										fontSize: '18',
+										fontWeight: 'bold'
+									}
+								},
+								data: this.datalist.boss,
+								labelLine: {
+									normal: {
+										show: false, //是否显示引导线
+										length: 10, //百分比引导线
+										length2: 20 //视觉引导项第二段的长度。
+									}
+								},
+							}
+
+						]
+					});
+
+				},
+			async getNumberAge() {
+					await this.getdata();
+					var myChart = echarts.init(document.getElementById('numberage'));
+					myChart.setOption({
+						//hover提示信息
+						tooltip: {
+							color: '#fff'
+						},
+						legend: {
+							left: 45,
+							bottom: 0,
+							itemWidth: 10, //图例标记的图形宽度
+							itemHeight: 10, //图例标记的图形高度
+							itemGap: 10, //设置间距
+							icon: 'circle',
+							data:this.datalist.rank_name,
+							textStyle: {
+								color: '#fff', //文字颜色
+								fontSize: 14 //文字大小
+							}
+						},
+						//圆环颜色
+						color: ['#ffc700', '#f7622e', '#25d1d7'],
+						//圆环内的内容
+						graphic: [{
+							type: 'text',
+							top: '30%',
+							left: 'center'
+							// style: {
+							// 	text: '10000人',
+							// 	fill: '#fff',
+							// 	fontSize: 12,
+							// }
+						}],
+						series: [{
+								type: 'pie', //饼图的中心（圆心）坐标，数组的第一项是横坐标，第二项是纵坐标。
+								center: ['50%', '35%'], //饼图的半径，数组的第一项是内半径，第二项是外半径
+								radius: ['50%', '70%'], //饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度
+								label: {
+									show: false,
+									// position: 'center'
+								},
+								animation: false,
+								emphasis: {
+									//鼠标放在圆环上显示的标签样式
+									show: true,
+									textStyle: {
+										fontSize: '18',
+										fontWeight: 'bold'
+									}
+								},
+								data:this.datalist.returned_rank,
+								labelLine: {
+									normal: {
+										show: false, //是否显示引导线
+										length: 10, //百分比引导线
+										length2: 20 //视觉引导项第二段的长度。
+									}
+								},
+							}
+
+						]
+					});
+
+				},
+				//团队注册
+				async getTeam() {
+					await this.getdata();
+					var myChart = echarts.init(document.getElementById('teambox'));
+					myChart.setOption({
+						//hover提示信息
+						tooltip: {
+							color: '#fff',
+						},
+						// color: ['#f7612d', '#00e1d5'],
+						barCategoryGap: '20%',
+						series: {
+							type: 'bar',
+							barWidth: '60%', //设置柱状的大小\
+							data: this.datalist.member_reg,
+							itemStyle: {
+								normal: {
+									color: function(params) {
+										var colorList = ['#f7612d', '#00e1d5', '#f7612d', '#00e1d5',
+											'#f7612d', '#00e1d5'
+										];
+										return colorList[params.dataIndex];
+									}
+								},
+							},
+							label: {
+								show: true, //开启显示
+								position: 'top', //在上方显示
+								textStyle: { //数值样式
+									color: '#fff',
+									fontSize: 16,
+									fontWeight: 600
+								}
+							}
+						},
+						xAxis: {
+							data: this.datalist.team_name,
+							axisLabel: {
+								show: true,
+								textStyle: {
+									color: '#fff', //更改y轴字体颜色
+									fontSize: '16',
+								}
+							},
+							"axisLine": { //y轴
+								"show": false
+
+							},
+							"axisTick": { //y轴刻度线
+								"show": false
+							},
+							margin: 40,
+						},
+						yAxis: {
+							"show": false,
+							type: 'value',
+							axisLabel: {
+								show: true,
+								textStyle: {
+									color: '#fff', //更改y轴字体颜色
+									fontSize: '16',
+								}
+							},
+							"axisLine": { //y轴
+								"show": false
+
+							},
+							"axisTick": { //y轴刻度线
+								"show": false
+							},
+							"splitLine": { //网格线
+								"show": false
+							}
+						}
+					})
+				},
+				//团队月总额
+				async getTeam1() {
+					await this.getdata();
+					var myChart = echarts.init(document.getElementById('teambox1'));
+					myChart.setOption({
+						//hover提示信息
+						tooltip: {
+							color: '#fff',
+						},
+						// color: ['#f7612d', '#00e1d5'],
+						barCategoryGap: '20%',
+						series: {
+							type: 'bar',
+							barWidth: '60%', //设置柱状的大小\
+							data: this.datalist.money_month,
+							itemStyle: {
+								normal: {
+									color: function(params) {
+										var colorList = ['#f7612d', '#00e1d5', '#f7612d', '#00e1d5',
+											'#f7612d', '#00e1d5'
+										];
+										return colorList[params.dataIndex];
+									}
+								},
+							},
+							label: {
+								show: true, //开启显示
+								position: 'top', //在上方显示
+								textStyle: { //数值样式
+									color: '#fff',
+									fontSize: 16,
+									fontWeight: 600
+								}
+							}
+						},
+						xAxis: {
+							data: this.datalist.team_name,
+							axisLabel: {
+								show: true,
+								textStyle: {
+									color: '#fff', //更改y轴字体颜色
+									fontSize: '16',
+								}
+							},
+							"axisLine": { //y轴
+								"show": false
+
+							},
+							"axisTick": { //y轴刻度线
+								"show": false
+							},
+							margin: 40,
+						},
+						yAxis: {
+							"show": false,
+							type: 'value',
+							axisLabel: {
+								show: true,
+								textStyle: {
+									color: '#fff', //更改y轴字体颜色
+									fontSize: '16',
+								}
+							},
+							"axisLine": { //y轴
+								"show": false
+
+							},
+							"axisTick": { //y轴刻度线
+								"show": false
+							},
+							"splitLine": { //网格线
+								"show": false
+							}
+						}
+					})
+				},
+				//团队月佣金
+				async getTeam2() {
+					await this.getdata();
+					var myChart = echarts.init(document.getElementById('teambox2'));
+					myChart.setOption({
+						//hover提示信息
+						tooltip: {
+							color: '#fff',
+						},
+						// color: ['#f7612d', '#00e1d5'],
+						barCategoryGap: '20%',
+						series: {
+							type: 'bar',
+							barWidth: '60%', //设置柱状的大小\
+							data: this.datalist.returned_month,
+							itemStyle: {
+								normal: {
+									color: function(params) {
+										var colorList = ['#f7612d', '#00e1d5', '#f7612d', '#00e1d5',
+											'#f7612d', '#00e1d5'
+										];
+										return colorList[params.dataIndex];
+									}
+								},
+							},
+							label: {
+								show: true, //开启显示
+								position: 'top', //在上方显示
+								textStyle: { //数值样式
+									color: '#fff',
+									fontSize: 16,
+									fontWeight: 600
+								}
+							}
+						},
+						xAxis: {
+							data: this.datalist.team_name,
+							axisLabel: {
+								show: true,
+								textStyle: {
+									color: '#fff', //更改y轴字体颜色
+									fontSize: '16',
+								}
+							},
+							"axisLine": { //y轴
+								"show": false
+
+							},
+							"axisTick": { //y轴刻度线
+								"show": false
+							},
+							margin: 40,
+						},
+						yAxis: {
+							"show": false,
+							type: 'value',
+							axisLabel: {
+								show: true,
+								textStyle: {
+									color: '#fff', //更改y轴字体颜色
+									fontSize: '16',
+								}
+							},
+							"axisLine": { //y轴
+								"show": false
+
+							},
+							"axisTick": { //y轴刻度线
+								"show": false
+							},
+							"splitLine": { //网格线
+								"show": false
+							}
+						}
+					})
+				},
+				//地图
+				async getMap() {
+					await this.getdata();
+					var myChart = echarts.init(document.getElementById('map'));
+					myChart.setOption({
+						//hover提示信息
+						tooltip: {
+							color: '#fff',
+						},
+						visualMap: {
+							min: 0, //visualMapPiecewise组件的最小值
+							max: 1000, //visualMapPiecewise组件的最大值
+							inRange: {
+								color: ['lightskyblue', 'yellow', 'orangered'] //颜色变化范围
+							},
+							textStyle: { //数值样式
+								color: '#fff',
+								fontSize: 16,
+								fontWeight: 600
+							},
+							type: 'piecewise', //分段型
+							pieces: [{
+									gte: 0,
+									lte: 9,
+									label: '1-9人',
+									color: '#ced88b'
+								},
+								{
+									gte: 10,
+									lte: 99,
+									label: '10-99人',
+									color: '#fab26b'
+								},
+								{
+									gte: 100,
+									lte: 499,
+									label: '100-499人',
+									color: '#ff9baa'
+								},
+								{
+									gte: 500,
+									lte: 999,
+									label: '500-999人',
+									color: '#ff646b'
+								},
+								{
+									gte: 1000,
+									label: '大于1000人',
+									color: '#ff353d'
+								}
+
+							]
+						},
+						series: [{
+							name: '全国',
+							type: 'map',
+							roam: true,
+							hoverable: false,
+							zoom: 1.25,
+							mapType: 'china',
+							itemStyle: {
+								normal: {
+									label: {
+										show: true
+									}
+								},
+								emphasis: {
+									label: {
+										show: true
+									}
+								}
+							},
+							label: {
+								normal: {
+									textStyle: {
+										fontSize: 12,
+										color: 'yellow'
+									}
+								}
+							},
+							data: this.datalist.area
+						}]
+					})
+				}
+			},
+		})
+	</script>
+
+</html>
